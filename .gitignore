@@ -1,0 +1,12 @@
+*.iml
+.gradle
+/local.properties
+/.idea/*
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+app/libs/
+qamodule/libs/
+qamodule/src/main/java/
+qamodule/src/main/res/drawable/
