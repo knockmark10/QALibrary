@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">QAModule</string>
 
-    <string name="qa_base_endpoint">http://localhost:3000</string>
+    <!--<string name="qa_base_endpoint">http://localhost:3000</string>-->
+    <string name="qa_base_endpoint">https://calm-island-39702.herokuapp.com</string>
     <string name="qa_accept">Aceptar</string>
     <string name="qa_cancel">Cancelar</string>
     <string name="qa_login_label">Iniciar sesión</string>
