@@ -27,6 +27,9 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
     private FirebaseManager firebaseManager;
     private QAAuthenticationCallback mListener;
 
+    /**
+     * Required empty private constructor
+     */
     @SuppressLint("ValidFragment")
     private DialogAuthentication() {
     }
@@ -109,20 +112,38 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
         loadingContainer.setVisibility(View.GONE);
     }
 
+    /**
+     * Custom builder design pattern
+     */
     public static class Builder {
         private QAAuthenticationCallback authenticationListener;
         private String packageName;
 
+        /**
+         * Sets the listener required for authenticating
+         * @param authenticationListener
+         * @return
+         */
         public Builder setAuthenticationListener(@NonNull QAAuthenticationCallback authenticationListener) {
             this.authenticationListener = authenticationListener;
             return this;
         }
 
+        /**
+         * Sets the package name of the app to be authenticated
+         * @param packageName
+         * @return
+         */
         public Builder setPackageName(@NonNull String packageName) {
             this.packageName = packageName;
             return this;
         }
 
+        /**
+         * Method to build the dialog with custom parameters specified before.
+         * If any of the methods weren't called, it will raise an exception.
+         * @return
+         */
         public DialogAuthentication create() {
             checkNotNull();
             DialogAuthentication dialogAuthentication = new DialogAuthentication();

@@ -36,9 +36,23 @@ public class BaseApiKeyManager<
     private static final String CLIENT_SECRET_KEY = "CLIENT_SECRET_KEY";
     private static final String PINPOINT_ANALYTICS = "PinpointAnalytics";
 
+    /**
+     * Required empty private constructor
+     */
     private BaseApiKeyManager() {
     }
 
+    /**
+     * Gets the api key from the http header. It requires the
+     * DataConfiguration class to read the property using
+     * reflection. If the property is not found with default
+     * value, it will take the alternativeFieldName to look
+     * instead.
+     *
+     * @param alternativeFieldName as alternative field name to look for
+     * @param maskApiKey           specifies if it should mask the api key
+     * @return the api key requested
+     */
     public String getHeaderApiKey(@NonNull String alternativeFieldName, @NonNull boolean maskApiKey) {
         ReflectionUtils<DATACONFIGURATION, String> reflectionUtils = new ReflectionUtils<>();
         if (reflectionUtils.getProperty(dataConfiguration, API_KEY) != null) {
@@ -50,6 +64,15 @@ public class BaseApiKeyManager<
         }
     }
 
+    /**
+     * Gets the client secret from the http header. It requires
+     * the DataConfiguration class to look into. If the searching
+     * process failed, it will take the alternativeFieldName.
+     *
+     * @param alternativeFieldName as alternative field name to look for
+     * @param maskApiKey           specifies if it should mask the api key
+     * @return the api key requested
+     */
     public String getHeaderClientSecret(@NonNull String alternativeFieldName, @NonNull boolean maskApiKey) {
         ReflectionUtils<DATACONFIGURATION, String> reflectionUtils = new ReflectionUtils<>();
         if (reflectionUtils.getProperty(dataConfiguration, CLIENT_SECRET_KEY) != null) {
@@ -61,6 +84,14 @@ public class BaseApiKeyManager<
         }
     }
 
+    /**
+     * Gets the firebase api key used for the current project, based
+     * on the instance of the class provided. It uses reflection to
+     * read the property.
+     *
+     * @param maskApiKey specifies if it should mask the api key
+     * @return the api key requested
+     */
     public String getFirebaseApiKey(@NonNull boolean maskApiKey) {
         ReflectionUtils<FIREBASEAPP, FIREBASEOPTIONS> reflectionUtils = new ReflectionUtils<>();
         FIREBASEOPTIONS firebaseOptions = reflectionUtils.getProperty(firebaseApp, ZZK_PROPERTY);
@@ -69,6 +100,13 @@ public class BaseApiKeyManager<
                 : firebaseOptionsReflection.getProperty(firebaseOptions, ZZE_PROPERTY);
     }
 
+    /**
+     * Gets the key from AWSMobileClient object using reflection. Deconstruction
+     * of the object provided is performed to extract the key desired.
+     *
+     * @param maskApiKey specifies if it should mask the api key
+     * @return the api key requested
+     */
     public String getAWSKey(@NonNull boolean maskApiKey) {
         String awsKey;
         ReflectionUtils<AWSMOBILECLIENT, AWSCONFIGURATION> genericAWSClient = new ReflectionUtils<>();
@@ -86,6 +124,14 @@ public class BaseApiKeyManager<
         return maskApiKey ? maskApiKey(awsKey) : awsKey;
     }
 
+    /**
+     * Performs an extraction of the endpoints declared on the
+     * DataConfiguration classes. It uses reflection for the
+     * extraction.
+     *
+     * @param type could be Tickets or Food to specify the proper class
+     * @return list of endpoints requested
+     */
     public List<String> getEndpointsFromDataConfiguration(@NonNull EndpointsType type) {
         List<String> endpoints = new ArrayList<>();
         Class classData;
@@ -134,6 +180,13 @@ public class BaseApiKeyManager<
         return null;
     }
 
+    /**
+     * Masks the api key provided, showing only the last
+     * four digits of the key.
+     *
+     * @param apiKey the key to mask
+     * @return the api key masked
+     */
     public String maskApiKey(String apiKey) {
         StringBuilder maskedApiKey = new StringBuilder();
         for (int i = 0; i < apiKey.length(); i++) {
@@ -156,6 +209,17 @@ public class BaseApiKeyManager<
         return jsonObjectToReturn;
     }
 
+    /**
+     * Custom builder to construct the object
+     * desired
+     *
+     * @param <DATACONFIGURATION>     instance of DataConfiguration
+     * @param <DATACONFIGURATIONFOOD> instance of DataConfiguration from 'alimentos' module
+     * @param <FIREBASEAPP>           instance of FirebaseApp
+     * @param <FIREBASEOPTIONS>       instance of FirebaseOptions
+     * @param <AWSMOBILECLIENT>       instance of AwsMobileClient
+     * @param <AWSCONFIGURATION>      instance of AwsConfiguration
+     */
     public static class Builder<
             DATACONFIGURATION,
             DATACONFIGURATIONFOOD,
@@ -170,26 +234,61 @@ public class BaseApiKeyManager<
         private FIREBASEAPP firebaseApp;
         private AWSMOBILECLIENT awsMobileClient;
 
+        /**
+         * Sets the instance from the DataConfiguration class
+         * to inspect. Be sure to provide the one from 'app'
+         * module.
+         *
+         * @param dataConfiguration from 'app' module
+         * @return an instance of the builder to chain calls
+         */
         public Builder setDataConfiguration(DATACONFIGURATION dataConfiguration) {
             this.dataConfiguration = dataConfiguration;
             return this;
         }
 
+        /**
+         * Sets the instance from DataConfiguration class to
+         * inspect. Be sure to provide the one from 'alimentos'
+         * module.
+         *
+         * @param dataConfigurationFood from 'alimentos' module
+         * @return an instance of the builder to chain calls
+         */
         public Builder setDataConfigurationFood(DATACONFIGURATIONFOOD dataConfigurationFood) {
             this.dataConfigurationFood = dataConfigurationFood;
             return this;
         }
 
+        /**
+         * Sets an instance of the FirebaseApp from
+         * firebase module to analyze in further steps.
+         * @param firebaseApp the singleton instance
+         * @return an instance of the builder to chain calls
+         */
         public Builder setFirebaseApp(FIREBASEAPP firebaseApp) {
             this.firebaseApp = firebaseApp;
             return this;
         }
 
+        /**
+         * Sets an instance of the AwsMobileClient from
+         * AWSMobileClient to analyze in further steps.
+         * @param awsMobileClient the singleton instance
+         * @return
+         */
         public Builder setAwsMobileClient(AWSMOBILECLIENT awsMobileClient) {
             this.awsMobileClient = awsMobileClient;
             return this;
         }
 
+        /**
+         * Method to build the full object with the
+         * properties properly defined. It will raise
+         * an exception if some property wasn't defined
+         * in previous calls.
+         * @return
+         */
         public BaseApiKeyManager create() {
             checkNotNull();
             BaseApiKeyManager<
@@ -225,6 +324,5 @@ public class BaseApiKeyManager<
             }
         }
     }
-
 
 }
