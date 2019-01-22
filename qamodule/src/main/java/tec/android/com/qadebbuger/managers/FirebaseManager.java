@@ -30,7 +30,6 @@ public class FirebaseManager {
                 .subscribe(new Observer<AuthenticationResponse>() {
                                @Override
                                public void onCompleted() {
-
                                }
 
                                @Override

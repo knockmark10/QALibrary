@@ -1,5 +1,6 @@
 package tec.android.com.qadebbuger.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -21,8 +22,11 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
     private TextView btnCancel;
     private String packageName;
     private FirebaseManager firebaseManager;
-
     private QAAuthenticationCallback mListener;
+
+    @SuppressLint("ValidFragment")
+    private DialogAuthentication() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,19 +54,12 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
         btnCancel.setOnClickListener(onCancel);
     }
 
-    public void setAuthenticationListener(QAAuthenticationCallback listener) {
-        mListener = listener;
-    }
-
     private void setupFirebaseManager() {
         firebaseManager = new FirebaseManager(getActivity());
         firebaseManager.setAuthenticationListener(this);
     }
 
     private void authenticate() {
-        if (packageName == null) {
-            throw new IllegalArgumentException("You need to set the packageName before you can authenticate.");
-        }
         AuthenticationRequest request = new AuthenticationRequest(
                 etAuthenticationEmail.getText().toString(),
                 etAuthenticationPassword.getText().toString(),
@@ -72,10 +69,13 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
         firebaseManager.authenticate(request);
     }
 
-    public void setPackageName(String packageName) {
+    private void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
+    private void setAuthenticationListener(QAAuthenticationCallback listener) {
+        mListener = listener;
+    }
 
     View.OnClickListener onAccept = new View.OnClickListener() {
         @Override
@@ -102,5 +102,38 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
     public void onAuthenticationFailed() {
         dismiss();
         mListener.onLoginFailed();
+    }
+
+    public static class Builder {
+        private QAAuthenticationCallback authenticationListener;
+        private String packageName;
+
+        public Builder setAuthenticationListener(QAAuthenticationCallback authenticationListener) {
+            this.authenticationListener = authenticationListener;
+            return this;
+        }
+
+        public Builder setPackageName(String packageName) {
+            this.packageName = packageName;
+            return this;
+        }
+
+        public DialogAuthentication create() {
+            checkNotNull();
+            DialogAuthentication dialogAuthentication = new DialogAuthentication();
+            dialogAuthentication.setPackageName(packageName);
+            dialogAuthentication.setAuthenticationListener(authenticationListener);
+            return dialogAuthentication;
+        }
+
+        private void checkNotNull() {
+            if (packageName == null) {
+                throw new IllegalArgumentException("You must set package name to initialize this dialog.");
+            }
+
+            if (authenticationListener == null) {
+                throw new IllegalArgumentException("You must set authentication listener to initialize this dialog.");
+            }
+        }
     }
 }
