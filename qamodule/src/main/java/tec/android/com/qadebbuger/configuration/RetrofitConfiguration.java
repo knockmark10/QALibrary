@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import java.util.concurrent.TimeUnit;
 
 import library.android.com.qamodule.R;
+import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -30,8 +31,15 @@ public class RetrofitConfiguration {
         httpClient.readTimeout(60, TimeUnit.SECONDS);
         httpClient.connectTimeout(60, TimeUnit.SECONDS);
         httpClient.writeTimeout(60, TimeUnit.SECONDS);
+        httpClient.certificatePinner(providesCertificatePinner());
         gson = new GsonBuilder().setLenient().create();
         setup();
+    }
+
+    private CertificatePinner providesCertificatePinner() {
+        return new CertificatePinner.Builder()
+                .add("calm-island-39702.herokuapp.com", "sha256/Vuy2zjFSPqF5Hz18k88DpUViKGbABaF3vZx5Raghplc=")
+                .build();
     }
 
     private void setup() {
