@@ -52,6 +52,7 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
         etAuthenticationPassword = view.findViewById(R.id.authentication_password);
         btnAccept = view.findViewById(R.id.authentication_accept);
         btnCancel = view.findViewById(R.id.authentication_cancel);
+        loadingContainer = view.findViewById(R.id.authentication_loading);
 
         btnAccept.setOnClickListener(onAccept);
         btnCancel.setOnClickListener(onCancel);

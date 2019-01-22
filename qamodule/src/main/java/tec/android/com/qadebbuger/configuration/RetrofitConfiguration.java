@@ -27,9 +27,9 @@ public class RetrofitConfiguration {
     public RetrofitConfiguration(Context context) {
         mContext = context;
         httpClient = new OkHttpClient.Builder();
-        httpClient.readTimeout(15, TimeUnit.SECONDS);
-        httpClient.connectTimeout(15, TimeUnit.SECONDS);
-        httpClient.writeTimeout(15, TimeUnit.SECONDS);
+        httpClient.readTimeout(60, TimeUnit.SECONDS);
+        httpClient.connectTimeout(60, TimeUnit.SECONDS);
+        httpClient.writeTimeout(60, TimeUnit.SECONDS);
         gson = new GsonBuilder().setLenient().create();
         setup();
     }
