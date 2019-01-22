@@ -3,10 +3,12 @@ package tec.android.com.qadebbuger.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import library.android.com.qamodule.R;
@@ -20,6 +22,7 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
     private EditText etAuthenticationPassword;
     private TextView btnAccept;
     private TextView btnCancel;
+    private LinearLayout loadingContainer;
     private String packageName;
     private FirebaseManager firebaseManager;
     private QAAuthenticationCallback mListener;
@@ -69,19 +72,10 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
         firebaseManager.authenticate(request);
     }
 
-    private void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    private void setAuthenticationListener(QAAuthenticationCallback listener) {
-        mListener = listener;
-    }
-
     View.OnClickListener onAccept = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             authenticate();
-            dismiss();
         }
     };
 
@@ -104,16 +98,26 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
         mListener.onLoginFailed();
     }
 
+    @Override
+    public void showLoading() {
+        loadingContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        loadingContainer.setVisibility(View.GONE);
+    }
+
     public static class Builder {
         private QAAuthenticationCallback authenticationListener;
         private String packageName;
 
-        public Builder setAuthenticationListener(QAAuthenticationCallback authenticationListener) {
+        public Builder setAuthenticationListener(@NonNull QAAuthenticationCallback authenticationListener) {
             this.authenticationListener = authenticationListener;
             return this;
         }
 
-        public Builder setPackageName(String packageName) {
+        public Builder setPackageName(@NonNull String packageName) {
             this.packageName = packageName;
             return this;
         }
@@ -121,8 +125,8 @@ public class DialogAuthentication extends DialogFragment implements FirebaseMana
         public DialogAuthentication create() {
             checkNotNull();
             DialogAuthentication dialogAuthentication = new DialogAuthentication();
-            dialogAuthentication.setPackageName(packageName);
-            dialogAuthentication.setAuthenticationListener(authenticationListener);
+            dialogAuthentication.packageName = this.packageName;
+            dialogAuthentication.mListener = this.authenticationListener;
             return dialogAuthentication;
         }
 

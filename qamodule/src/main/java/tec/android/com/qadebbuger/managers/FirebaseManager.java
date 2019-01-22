@@ -23,6 +23,7 @@ public class FirebaseManager {
 
     public void authenticate(AuthenticationRequest request) {
         checkAuthenticationListener();
+        mListener.showLoading();
         RetrofitConfiguration configuration = new RetrofitConfiguration(mContext);
         configuration.authenticate(request)
                 .subscribeOn(Schedulers.io())
@@ -34,11 +35,13 @@ public class FirebaseManager {
 
                                @Override
                                public void onError(Throwable e) {
+                                   mListener.hideLoading();
                                    mListener.onAuthenticationFailed();
                                }
 
                                @Override
                                public void onNext(AuthenticationResponse authenticationResponse) {
+                                   mListener.hideLoading();
                                    mListener.onAuthenticationSucceeded();
                                }
                            }
@@ -55,6 +58,10 @@ public class FirebaseManager {
         void onAuthenticationSucceeded();
 
         void onAuthenticationFailed();
+
+        void showLoading();
+
+        void hideLoading();
     }
 
 }
