@@ -27,13 +27,13 @@ dependencies {
 
 You have multiple features within this library:
 
- [1. Authentication Dialog](https://github.com/knockmark10/KotlinCommons/wiki#1-shared-preferences)
+ [1. Authentication Dialog](https://github.com/knockmark10/QALibrary#1-authentication-dialog)
  
- [2. Reflection Utils](https://github.com/knockmark10/KotlinCommons/wiki#2-runtime-permissions-manager)
+ [2. Reflection Utils](https://github.com/knockmark10/QALibrary#2-reflection-utils)
  
- [3. Package Manager](https://github.com/knockmark10/KotlinCommons/wiki#3-geocoder-manager)
+ [3. Package Manager](https://github.com/knockmark10/QALibrary#3-packagemanager)
  
- [4. BaseApiKeyManager](https://github.com/knockmark10/KotlinCommons/wiki#4-tracking-manager-gps)
+ [4. BaseApiKeyManager](https://github.com/knockmark10/QALibrary#4-baseapikeymanager)
 
 ## **1. Authentication Dialog**
 
